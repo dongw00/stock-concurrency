@@ -8,27 +8,27 @@ CreatedDate: 2022년 10월 15일 오후 2:59
 
 ```java
 @Test
-void concurrency_stock_decrease()throws InterruptedException{
-        int threadCnt=100;
-        ExecutorService executorService=Executors.newFixedThreadPool(32);
-        CountDownLatch latch=new CountDownLatch(threadCnt);
+void concurrency_stock_decrease() throws InterruptedException {
+    int threadCnt = 100;
+    ExecutorService executorService = Executors.newFixedThreadPool(32);
+    CountDownLatch latch = new CountDownLatch(threadCnt);
 
-        for(int i=0;i<threadCnt; i++){
-        executorService.submit(()->{
-        try{
-        stockService.decrease(1L,1L);
-        }finally{
-        latch.countDown();
-        }
+    for (int i = 0; i < threadCnt; i++) {
+        executorService.submit(() -> {
+            try {
+                stockService.decrease(1L, 1L);
+            } finally {
+                latch.countDown();
+            }
         });
-        }
+    }
 
-        latch.await();
+    latch.await();
 
-        Stock stock=stockRepository.findById(1L).orElseThrow();
+    Stock stock = stockRepository.findById(1L).orElseThrow();
 
-        assertEquals(0L,stock.getQuantity());
-        }
+    assertEquals(0L, stock.getQuantity());
+}
 ```
 
 ![Untitled](img/1.png)
