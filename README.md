@@ -108,3 +108,28 @@ public class TransactionStockService {
     - 이름을 가진 mata-data locking방법
     - 이름을 가진 Lock을 획득한 후 해제될때까지 다른 세션은 해당 Lock을 획득X
     - Transaction이 종료될때 Lock이 자동해제되지 않음
+
+## 해결방법 3. Redis
+### 종류
+1. Lettuce
+   - setnx 명령어를 활용하여 분산락 구현
+   - Spin Lock방식 (구현이 간단하지만 Redis에 부하를 줄 수 있다.)
+![Untitled](img/6.png)
+2. Redisson
+   - Pub - Sub 기반 Lock 제공
+   - Lock 획득 / 재시도를 기본으로 제공
+   - Lettuce보다 Redis에 부하가 덜함
+![Untitled](img/7.png)
+
+### 실무
+- 재시도가 필요하지 않은 lock은 lettuce 활용
+- 재시도가 필요한 경우 redisson 활용
+
+## MySQL vs Redis
+### MySQL
+- 이미 MySQL을 사용하고 있다면 별도의 비용없이 구축가능
+- Redis보다는 성능이 좋지않다.
+
+### Redis
+- 사용하고 있지 않고 있다면 별도 구축해야함
+- MySQL보다는 성능이 좋음
